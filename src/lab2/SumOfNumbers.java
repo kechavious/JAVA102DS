@@ -9,7 +9,7 @@ package lab2;
 public class SumOfNumbers {
     /*
         Implement this function. Do not change
-        anything else in this file.
+        anything else in this file
     */
     public static int sumOfNumbers(String str) {
         int sum = 0;
