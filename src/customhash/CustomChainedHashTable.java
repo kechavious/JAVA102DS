@@ -30,7 +30,9 @@ public class CustomChainedHashTable implements IndexInterface_list {
 	// Consider to use add() operation in LinkList
 	public void insert(Integer x) {	
 	//***************Write your code in the below******************//
-		
+		int index = hash(x);
+		table[index].append(x);
+		numItems++;
 	//*************************************************************//
 	}
 	
@@ -41,7 +43,12 @@ public class CustomChainedHashTable implements IndexInterface_list {
 	// To get the value of node with x, consider to use getNode() function
 	public Node search(Integer x) {
 	//***************Write your code in the below******************//
-		return null;
+		int index = hash(x);
+		int pos = table[index].indexOf(x);
+		if (pos == -1) {
+			return null;
+		}
+		return table[index].getNode(pos);
 	//*************************************************************//
 	}
 	
@@ -51,21 +58,29 @@ public class CustomChainedHashTable implements IndexInterface_list {
 	// where it was deleted to indicate that it has been removed.
 	public void delete(Integer x) {
 	//***************Write your code in the below******************//
-		
+		int index = hash(x);
+		int pos = table[index].indexOf(x);
+		if (pos != -1) {
+			table[index].remove(pos);
+			numItems--;
+		}
 	//*************************************************************//
 	}
 	
 	// Implementation of isEmpty(): check whether the hash table is empty
 	public boolean isEmpty() {
 	//***************Write your code in the below******************//
-		return false;
+		return numItems == 0;
 	//*************************************************************//
 	}
 	
 	// Implementation of clear(): Clear the hash table
 	public void clear() {
 	//***************Write your code in the below******************//
-
+		for (int i=0; i < table.length; i++) {
+			table[i].clear();
+		}
+		numItems = 0;
 	//*************************************************************//
 	}
 
@@ -78,3 +93,4 @@ public class CustomChainedHashTable implements IndexInterface_list {
 		}
 	}
 } // 코드 12-1
+

@@ -10,7 +10,7 @@ public class LinkedList<E> implements ListInterface<E> {
 	}
 
 	// [알고리즘 5-10] 구현: 연결 리스트에 원소 x 삽입하기
-	public void add(int index, E item) {
+	public void add(int index) {
 		if (index >= 0 && index <= numItems) {
 			Node<E> prevNode = getNode(index - 1);
 			Node<E> newNode = new Node<>(item, prevNode.next);

@@ -1,7 +1,7 @@
 package customhash;
 
 public interface ListInterface<E> {
-	public void add(int i, E x);
+	public void add(int i);
 	public void append(E x);
 	public E remove(int i);
 	public boolean removeItem(E x);

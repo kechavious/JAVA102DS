@@ -2,7 +2,6 @@ package lab12;
 
 import java.io.*;
 import java.util.*;
-import java.util.HashMap;
 
 public class Solution_Copy {
     public static boolean solution(String[] phone_book) {
