@@ -1,96 +1,74 @@
 package customhash;
 
-public class CustomChainedHashTable implements IndexInterface_list {	
-	// Note that our hash table is implemented as Integer LinkedList using LinkList class
+public class CustomChainedHashTable implements IndexInterface_list {
+	// Hash table implemented as an array of Integer LinkedLists
 	private LinkedList<Integer>[] table;
-	int numItems = 0;
+	int numItems = 0; // Tracks the number of items in the hash table
 
-	//This is global variable representing NOT_FOUND. 
-	// Please use it directly in your function implementation.
+	// Global variable for indicating NOT_FOUND
 	public final int NOT_FOUND = -12345;
 	
-	// Constructor 1: Creating an empty linked hash table with the size of n.
+	// Constructor: Initialize an empty hash table with the given size
 	public CustomChainedHashTable(int n) {
 		table = (LinkedList<Integer>[]) new LinkedList[n]; 
 		for (int i = 0; i < n; i++)
 			table[i] = new LinkedList<>();
-		numItems = 0;
+			numItems = 0;
 	} 
 	
-	// Hash function: we only considr this hash function for implementation
-	// Please do not modify this function
-	// below is the hash function of h(x) = x % m, where m is the size of hash table
+	// Hash function: Computes hash value as x % table length
 	private int hash(Integer x) {                         
 		return x % table.length; 
 	}
 	
-	// Implementation of insert(): Inserting a key value with x into the hash table
-	// If there is space in the hash table, use the hash function to obtain the hash value 
-	// and store 'x' at the appropriate position in the hash table.
-	// Consider to use add() operation in LinkList
+	// Inserts a key value into the hash table
 	public void insert(Integer x) {	
-	//***************Write your code in the below******************//
-		int index = hash(x);
-		table[index].append(x);
-		numItems++;
-	//*************************************************************//
+		int index = hash(x); // Get hash index
+		table[index].append(x); // Add to the linked list
+		numItems++; // Increment item count
 	}
 	
-	// Implementation of search(): Searching a key value with x from the hash table
-	// If the key value being searched for does not exist in the hash table, return null.
-	// If it does exist, return the index where the key value is located.
-	// To get the index of node with x in LinkedList, consider to use indexof() function.
-	// To get the value of node with x, consider to use getNode() function
+	// Searches for a key in the hash table
+	// Returns the node containing the key or null if not found
 	public Node search(Integer x) {
-	//***************Write your code in the below******************//
-		int index = hash(x);
-		int pos = table[index].indexOf(x);
-		if (pos == -1) {
+		int index = hash(x); // Get hash index
+		int pos = table[index].indexOf(x); // Get position in the linked list
+		if (pos == -1) { // Key not found
 			return null;
 		}
-		return table[index].getNode(pos);
-	//*************************************************************//
+		return table[index].getNode(pos); // Return the node containing the key
 	}
 	
-	// Implementation of delete(): Deleteting a key value with x from the hash table
-	// If the key value 'x' exists in the hash table, delete it.
-	// Don't forget to store the global variable DELETED in the position 
-	// where it was deleted to indicate that it has been removed.
+	// Deletes a key from the hash table
 	public void delete(Integer x) {
-	//***************Write your code in the below******************//
-		int index = hash(x);
-		int pos = table[index].indexOf(x);
-		if (pos != -1) {
-			table[index].remove(pos);
-			numItems--;
+		int index = hash(x); // Get hash index
+		int pos = table[index].indexOf(x); // Find position of the key
+		if (pos != -1) { // If key exists, remove it
+			table[index].remove(pos); 
+			numItems--; // Decrement item count
 		}
-	//*************************************************************//
 	}
 	
-	// Implementation of isEmpty(): check whether the hash table is empty
+	// Checks if the hash table is empty
 	public boolean isEmpty() {
-	//***************Write your code in the below******************//
-		return numItems == 0;
-	//*************************************************************//
+		return numItems == 0; // True if no items in the table
 	}
 	
-	// Implementation of clear(): Clear the hash table
+	// Clears the entire hash table
 	public void clear() {
-	//***************Write your code in the below******************//
-		for (int i=0; i < table.length; i++) {
-			table[i].clear();
+		for (int i = 0; i < table.length; i++) { 
+			table[i].clear(); // Clear each linked list
 		}
-		numItems = 0;
-	//*************************************************************//
+		numItems = 0; // Reset item count
 	}
 
-	//////////////////////////////////////////////
-
+	// Prints all elements in the hash table for debugging
 	public void printAll() {
-		for (int i=0; i < table.length; i++) {
+		for (int i = 0; i < table.length; i++) {
 			System.out.print("Slot " + i + " : ");
-			table[i].printAll();
+			table[i].printAll(); // Print contents of each slot
 		}
 	}
-} // 코드 12-1
+}
+
 

@@ -18,8 +18,8 @@ class LargestElement {
         int answer1;
         int answer2;
 
-        answer1 = Solution.solution(input1,k1);
-        answer2 = Solution.solution(input2,k2);
+        answer1 = Solution_Game.solution(input1,k1);
+        answer2 = Solution_Game.solution(input2,k2);
 
         System.out.println("answer1: " + answer1); // Expected output: 5
         System.out.println("answer2: " + answer2); // Expected output: 4
