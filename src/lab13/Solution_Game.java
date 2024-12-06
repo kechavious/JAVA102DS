@@ -1,56 +1,62 @@
 package lab13;
 
+import java.io.*;
 import java.util.*;
-
+ 
 public class Solution_Game {
-    public int solution(int[][] grid) {
-        if (grid == null || grid.length == 0 || grid[0].length == 0) {
-            return -1; // 无效输入
-        }
-        
-        int rows = grid.length;
-        int cols = grid[0].length;
 
-        // 如果起点或终点是障碍，直接返回 -1
-        if (grid[0][0] == 0 || grid[rows - 1][cols - 1] == 0) {
+    public int solution(int[][] maps) {
+
+        //******************** Write your code here ********************//
+        if (maps[0][0] == 0) {
             return -1;
         }
+        // dimension(map: nxm matrix)
+        int n = maps.length;
+        int m = maps[0].length;
 
-        // BFS 初始化
+        if (n == 1 && m == 1) {
+            return 1; // alr there
+        }
+       
+        // directions for movement {up, down, left, right}
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        // visited array to track if a cell has been visited
+        boolean[][] visited = new boolean[n][m];
+        // BFS queue stores {row, col, steps}
         Queue<int[]> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[rows][cols];
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // 上下左右
 
-        queue.add(new int[]{0, 0, 1}); // {当前行, 当前列, 当前路径长度}
+        // start from the top-left corner
+        queue.add(new int[]{0, 0, 1}); // initial pos: step count 1
         visited[0][0] = true;
 
-        // BFS 开始
         while (!queue.isEmpty()) {
             int[] current = queue.poll();
             int x = current[0];
             int y = current[1];
-            int pathLength = current[2];
-
-            // 如果到达终点
-            if (x == rows - 1 && y == cols - 1) {
-                return pathLength;
+            int steps = current[2];
+           
+            // if we reach the bottom-right corner, return the steps
+            if (x == n - 1 && y == m - 1) {
+                return steps;
             }
-
-            // 遍历四个方向
-            for (int[] direction : directions) {
-                int newX = x + direction[0];
-                int newY = y + direction[1];
-
-                // 检查是否在边界内、可通行且未访问
-                if (newX >= 0 && newX < rows && newY >= 0 && newY < cols &&
-                    grid[newX][newY] == 1 && !visited[newX][newY]) {
-                    queue.add(new int[]{newX, newY, pathLength + 1});
-                    visited[newX][newY] = true; // 标记为已访问
+           
+            for (int[] dir : directions) { // explore all 4 possible directions
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+               
+                // check if the new position is within bounds && not a wall && not visited
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && maps[nx][ny] == 1 && !visited[nx][ny]) {
+                    queue.add(new int[]{nx, ny, steps + 1});
+                    visited[nx][ny] = true;
                 }
             }
         }
 
-        return -1; // 如果无法到达终点
+        // exit loop = no way to reach end
+        return -1;
+        //******************** Write your code here ********************//
+       
     }
-}
 
+}
