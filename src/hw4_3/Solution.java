@@ -1,28 +1,61 @@
 package hw4_3;
 
-import java.io.*;
-import java.util.*;
- 
-public class Solution {
-    public int solution(int[] input) {
-        int maxCount = 0; // 最大连续出现次数
-        int currentCount = 1; // 当前连续出现次数
+import java.util.HashSet;
+import java.util.Set;
 
-        for (int i = 1; i < input.length; i++) {
-            if (input[i] == input[i - 1]) {
-                currentCount++; // 如果与前一个数字相同，计数加1
-            } else {
-                maxCount = Math.max(maxCount, currentCount); // 更新最大值
-                currentCount = 1; // 重置当前计数
+public class Solution {
+    public static final int[][] DIRECTIONS = {
+        {0, 1},   // Right
+        {1, 1},   // Down-Right
+        {1, 0},   // Down
+        {1, -1},  // Down-Left
+        {0, -1},  // Left
+        {-1, -1}, // Up-Left
+        {-1, 0},  // Up
+        {-1, 1}   // Up-Right
+    };
+
+    public int solution(int[] arrows) {
+        Set<String> walls = new HashSet<>();
+        Set<String> visited = new HashSet<>();
+        int x = 0, y = 0; // Starting point
+        int rooms = 0;
+
+        // Mark the starting point as visited
+        visited.add(x + "," + y);
+
+        for (int arrow : arrows) {
+            for (int step = 0; step < 2; step++) { // Split movement into smaller steps
+                int dx = DIRECTIONS[arrow][0];
+                int dy = DIRECTIONS[arrow][1];
+                int nx = x + dx;
+                int ny = y + dy;
+
+                String wall = x + "," + y + "->" + nx + "," + ny;
+                String reverseWall = nx + "," + ny + "->" + x + "," + y;
+
+                // Check if the new wall creates a new room
+                if (visited.contains(nx + "," + ny) && !walls.contains(wall)) {
+                    rooms++; // A new room is formed
+                }
+
+                // Mark the wall and reverse wall as traversed
+                walls.add(wall);
+                walls.add(reverseWall);
+
+                // Mark the new point as visited
+                visited.add(nx + "," + ny);
+
+                // Update current position
+                x = nx;
+                y = ny;
             }
         }
 
-        // 检查最后一次连续计数
-        maxCount = Math.max(maxCount, currentCount);
-
-        return maxCount; // 返回最大连续出现次数
+        return rooms;
     }
 }
-    
+
+
 
 

@@ -3,54 +3,92 @@ package hw4_4;
 import java.io.*;
 import java.util.*;
  
-import java.util.*;
-
 public class Solution {
-    public boolean solution(int n, int[][] edges, int[][] constraints) {
-        // Step 1: Build adjacency list for the graph
-        Map<Integer, List<Integer>> graph = new HashMap<>();
+    
+    /*
+    To solve the problem, it is allowed to implement an additional class and variables here
+    or to utilize JAVA's packges
+    */
+
+    List<Integer>[] tree;
+    int[] parent;
+    int[] pre, post;
+    int time = 0;
+    boolean[] visited;
+    
+    public boolean solution(int n, int[][] path, int[][] order) {
+        tree = new ArrayList[n];
         for (int i = 0; i < n; i++) {
-            graph.put(i, new ArrayList<>());
+            tree[i] = new ArrayList<>();
         }
-        for (int[] edge : edges) {
-            graph.get(edge[0]).add(edge[1]);
-            graph.get(edge[1]).add(edge[0]); // Assuming undirected graph
+        for (int[] p : path) {
+            tree[p[0]].add(p[1]);
+            tree[p[1]].add(p[0]);
         }
-
-        // Step 2: Handle constraints
-        for (int[] constraint : constraints) {
-            int start = constraint[0];
-            int end = constraint[1];
-            if (!isPathExists(graph, start, end, n)) {
-                return false; // If any constraint fails, return false
+        parent = new int[n];
+        Arrays.fill(parent, -1);
+        pre = new int[n];
+        post = new int[n];
+        visited = new boolean[n];
+        parent[0] = 0;
+        dfsBuild(0);
+        List<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++) graph[i] = new ArrayList<>();
+        for (int i = 1; i < n; i++) {
+            graph[parent[i]].add(i);
+        }
+        for (int[] o : order) {
+            int A = o[0], B = o[1];
+            if (isAncestor(B, A)) {
+                return false;
+            }
+            graph[A].add(B);
+        }
+        return topologicalCheck(n, graph);
+    }
+    void dfsBuild(int u) {
+        visited[u] = true;
+        pre[u] = ++time;
+        for (int nxt : tree[u]) {
+            if (!visited[nxt]) {
+                parent[nxt] = u;
+                dfsBuild(nxt);
+            }
+        }
+        post[u] = ++time;
+    }
+    boolean isAncestor(int a, int b) {
+        return (pre[a] < pre[b]) && (post[a] > post[b]);
+    }
+    boolean topologicalCheck(int n, List<Integer>[] graph) {
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int nxt : graph[i]) {
+                indegree[nxt]++;
             }
         }
 
-        return true; // All constraints satisfied
-    }
-
-    // Helper method: Check if a path exists using DFS
-    private boolean isPathExists(Map<Integer, List<Integer>> graph, int start, int end, int n) {
-        boolean[] visited = new boolean[n];
-        return dfs(graph, start, end, visited);
-    }
-
-    // Depth-First Search to find a path
-    private boolean dfs(Map<Integer, List<Integer>> graph, int current, int target, boolean[] visited) {
-        if (current == target) {
-            return true; // Found the target
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) q.offer(i);
         }
 
-        visited[current] = true; // Mark current node as visited
-
-        for (int neighbor : graph.get(current)) {
-            if (!visited[neighbor]) {
-                if (dfs(graph, neighbor, target, visited)) {
-                    return true; // Found the target in the path
-                }
+        int count = 0;
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            count++;
+            for (int nxt : graph[cur]) {
+                indegree[nxt]--;
+                if (indegree[nxt] == 0) q.offer(nxt);
             }
         }
 
-        return false; // No path found
+        return count == n;
     }
 }
+
+
+
+
+
+
